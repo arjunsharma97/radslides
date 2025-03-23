@@ -1,4 +1,166 @@
-<!DOCTYPE html>
+    <script>
+        // DOM Elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all modals
+            const comingSoonModal = document.getElementById("comingSoonModal");
+            const authModal = document.getElementById("authModal");
+            const getStartedModal = document.getElementById("getStartedModal");
+            const learnMoreModal = document.getElementById("learnMoreModal");
+            
+            // Get all close buttons
+            const closeButtons = document.getElementsByClassName("close-modal");
+            
+            // Add event listeners to close buttons
+            Array.from(closeButtons).forEach(button => {
+                button.addEventListener('click', function() {
+                    comingSoonModal.style.display = "none";
+                    authModal.style.display = "none";
+                    getStartedModal.style.display = "none";
+                    learnMoreModal.style.display = "none";
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === comingSoonModal) {
+                    comingSoonModal.style.display = "none";
+                }
+                if (event.target === authModal) {
+                    authModal.style.display = "none";
+                }
+                if (event.target === getStartedModal) {
+                    getStartedModal.style.display = "none";
+                }
+                if (event.target === learnMoreModal) {
+                    learnMoreModal.style.display = "none";
+                }
+            });
+            
+            // Close modal when pressing ESC
+            window.addEventListener('keydown', function(event) {
+                if (event.key === "Escape") {
+                    comingSoonModal.style.display = "none";
+                    authModal.style.display = "none";
+                    getStartedModal.style.display = "none";
+                    learnMoreModal.style.display = "none";
+                }
+            });
+            
+            // Login/Signup button event handlers
+            document.querySelector('.login-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                authModal.style.display = "block";
+                // Make sure login tab is active
+                const loginTab = document.querySelector('[data-tab="login"]');
+                loginTab.click();
+            });
+            
+            // Handle all signup buttons throughout the page
+            const signupButtons = document.querySelectorAll('.signup-btn, button.secondary-btn');
+            signupButtons.forEach(button => {
+                if (button.textContent.trim().toLowerCase() === "sign up") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        authModal.style.display = "block";
+                        // Make sure signup tab is active
+                        const signupTab = document.querySelector('[data-tab="signup"]');
+                        signupTab.click();
+                    });
+                }
+            });
+            
+            // Get Started buttons
+            const getStartedButtons = document.querySelectorAll('.cta-btn');
+            getStartedButtons.forEach(button => {
+                if (button.textContent.trim().toLowerCase() === "get started" || 
+                    button.textContent.trim().toLowerCase() === "get started today") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        getStartedModal.style.display = "block";
+                    });
+                } else if (button.textContent.trim().toLowerCase() !== "sign up") {
+                    // Only add event listener if it's not a "Sign Up" button (already handled above)
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        comingSoonModal.style.display = "block";
+                    });
+                }
+            });
+            
+            // Learn More buttons - include both secondary buttons and regular CTA buttons
+            const allLearnMoreButtons = document.querySelectorAll('button, a');
+            allLearnMoreButtons.forEach(button => {
+                if (button.textContent.trim().toLowerCase() === "learn more") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        learnMoreModal.style.display = "block";
+                    });
+                }
+            });
+            
+            // Learn More CTA in the learn more modal
+            document.querySelector('.learn-more-cta').addEventListener('click', function(e) {
+                e.preventDefault();
+                learnMoreModal.style.display = "none";
+                getStartedModal.style.display = "block";
+            });
+            
+            // All other links
+            const otherLinks = document.querySelectorAll('a:not(.logo):not(.footer-logo)');
+            otherLinks.forEach(link => {
+                // Skip links that already have event listeners or that are "Learn More" links
+                const isLearnMoreLink = link.textContent.trim().toLowerCase() === "learn more";
+                if (!link.classList.contains('login-btn') && 
+                    !link.classList.contains('signup-btn') && 
+                    !link.classList.contains('cta-btn') && 
+                    !isLearnMoreLink) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        comingSoonModal.style.display = "block";
+                    });
+                }
+            });
+            
+            // Secondary buttons that aren't "Sign Up" or "Learn More"
+            document.querySelectorAll('.secondary-btn').forEach(button => {
+                const buttonText = button.textContent.trim().toLowerCase();
+                if (buttonText !== "sign up" && buttonText !== "learn more") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        comingSoonModal.style.display = "block";
+                    });
+                }
+            });
+            
+            // Tab switching in auth modal
+            const authTabs = document.querySelectorAll('.auth-tab');
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and forms
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.auth-form').forEach(form => {
+                        form.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding form
+                    const formId = this.getAttribute('data-tab') + '-form';
+                    document.querySelector('.' + formId).classList.add('active');
+                });
+            });
+            
+            // Form submission handlers (prevent actual submission)
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('This feature is coming soon. Thank you for your interest!');
+                });
+            });
+        });
+    </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -412,6 +574,52 @@
             margin: 8% auto;
         }
 
+        .learn-more-modal {
+            text-align: left;
+            max-width: 700px;
+            margin: 5% auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .learn-more-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .learn-more-section h3 {
+            color: #7e22ce;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .learn-more-section ul {
+            list-style-type: none;
+            padding-left: 1rem;
+        }
+
+        .learn-more-section ul li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .learn-more-section ul li:before {
+            content: '•';
+            color: #7e22ce;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -0.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .learn-more-cta {
+            display: inline-block;
+        }
+
         .auth-tabs {
             display: flex;
             margin-bottom: 1.5rem;
@@ -699,6 +907,45 @@
             </form>
         </div>
     </div>
+    
+    <!-- Learn More Modal -->
+    <div id="learnMoreModal" class="modal">
+        <div class="modal-content learn-more-modal">
+            <span class="close-modal">&times;</span>
+            <h2 style="color: #7e22ce; margin-bottom: 1.5rem;">About RAD SLIDES</h2>
+            
+            <p style="margin-bottom: 1.5rem;">RAD SLIDES is a revolutionary AI-powered presentation platform designed to transform how professionals, educators, and students create impactful presentations.</p>
+            
+            <div class="learn-more-section">
+                <h3>Our Mission</h3>
+                <p>We're on a mission to eliminate the stress and time-drain of presentation creation, enabling you to focus on what truly matters—your message and delivery.</p>
+            </div>
+            
+            <div class="learn-more-section">
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>AI-Powered Content Generation:</strong> Our advanced AI analyzes your topic and generates compelling content structured in a logical flow.</li>
+                    <li><strong>Professional Design Templates:</strong> Access a library of expertly designed templates that automatically adapt to your content.</li>
+                    <li><strong>Real-time Feedback:</strong> Receive actionable insights on your presentation's clarity, engagement potential, and impact.</li>
+                    <li><strong>Seamless Integration:</strong> Import existing presentations from PowerPoint or Google Slides and enhance them with our AI tools.</li>
+                </ul>
+            </div>
+            
+            <div class="learn-more-section">
+                <h3>Why Choose RAD SLIDES?</h3>
+                <ul>
+                    <li><strong>Save Time:</strong> Create professional presentations in minutes, not hours.</li>
+                    <li><strong>Reduce Stress:</strong> Eliminate the anxiety of starting with a blank slide.</li>
+                    <li><strong>Boost Impact:</strong> Ensure your message resonates with your audience through optimized content and design.</li>
+                    <li><strong>Stay Focused:</strong> Concentrate on your message while we handle the structure and design.</li>
+                </ul>
+            </div>
+            
+            <div class="text-center" style="margin-top: 2rem;">
+                <button class="cta-btn learn-more-cta">Get Started Today</button>
+            </div>
+        </div>
+    </div>
     <script>
         // DOM Elements
         document.addEventListener('DOMContentLoaded', function() {
@@ -750,23 +997,30 @@
                 loginTab.click();
             });
             
-            document.querySelector('.signup-btn').addEventListener('click', function(e) {
-                e.preventDefault();
-                authModal.style.display = "block";
-                // Make sure signup tab is active
-                const signupTab = document.querySelector('[data-tab="signup"]');
-                signupTab.click();
+            // Handle all signup buttons throughout the page
+            const signupButtons = document.querySelectorAll('.signup-btn, button.secondary-btn');
+            signupButtons.forEach(button => {
+                if (button.textContent.trim().toLowerCase() === "sign up") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        authModal.style.display = "block";
+                        // Make sure signup tab is active
+                        const signupTab = document.querySelector('[data-tab="signup"]');
+                        signupTab.click();
+                    });
+                }
             });
             
             // Get Started buttons
             const getStartedButtons = document.querySelectorAll('.cta-btn');
             getStartedButtons.forEach(button => {
-                if (button.textContent.trim() === "Get Started") {
+                if (button.textContent.trim().toLowerCase() === "get started") {
                     button.addEventListener('click', function(e) {
                         e.preventDefault();
                         getStartedModal.style.display = "block";
                     });
-                } else {
+                } else if (button.textContent.trim().toLowerCase() !== "sign up") {
+                    // Only add event listener if it's not a "Sign Up" button (already handled above)
                     button.addEventListener('click', function(e) {
                         e.preventDefault();
                         comingSoonModal.style.display = "block";
@@ -786,12 +1040,14 @@
                 }
             });
             
-            // Secondary buttons
+            // Secondary buttons that aren't "Sign Up"
             document.querySelectorAll('.secondary-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    comingSoonModal.style.display = "block";
-                });
+                if (button.textContent.trim().toLowerCase() !== "sign up") {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        comingSoonModal.style.display = "block";
+                    });
+                }
             });
             
             // Tab switching in auth modal
